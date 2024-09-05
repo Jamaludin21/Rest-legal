@@ -4,7 +4,14 @@ namespace Config;
 
 class Midtrans
 {
-    public $serverKey = 'SB-Mid-server-2OdfaTNys1uQ8J3WVJc10XMA';
-    public $clientKey = 'SB-Mid-client-txrqq3nX8KHnJ-VL';
+    public $serverKey;
+    public $clientKey;
     public $isProduction = false;
+
+    public function __construct()
+    {
+        // Get Midtrans keys and environment from .env file
+        $this->serverKey = env('CI_SERVER_KEY', 'default_server_key');
+        $this->clientKey = env('CI_CLIENT_KEY', 'default_client_key');
+    }
 }

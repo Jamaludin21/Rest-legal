@@ -6,6 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
+
 $routes->group('user', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('/', 'UserController::index');
     $routes->get('(:num)', 'UserController::show/$1');

@@ -3,10 +3,9 @@
 namespace App\Controllers;
 
 use Midtrans\Config;
-use Midtrans\Transaction;
-use App\Models\TransactionModel;
+use CodeIgniter\RESTful\ResourceController;
 
-class PaymentController extends BaseController
+class PaymentController extends ResourceController 
 {
     public function __construct()
     {
@@ -19,7 +18,7 @@ class PaymentController extends BaseController
     // Charge payment
     public function charge()
     {
-        $data = $this->request->getPost();
+        $data = $this->request->getJSON(true);
 
         // Set payment details
         $params = [
@@ -42,29 +41,29 @@ class PaymentController extends BaseController
     }
 
     // Payment notification handler
-    public function notification()
-    {
-        $notification = new \Midtrans\Notification();
+    // public function notification()
+    // {
+    //     $notification = new \Midtrans\Notification();
 
-        $transaction = $notification->transaction_status;
-        $order_id = $notification->order_id;
-        $fraud_status = $notification->fraud_status;
+    //     $transaction = $notification->transaction_status;
+    //     $order_id = $notification->order_id;
+    //     $fraud_status = $notification->fraud_status;
 
-        // Process transaction status
-        if ($transaction == 'capture') {
-            if ($fraud_status == 'accept') {
-                // Payment success
-                // Update transaction status in the database
-            }
-        } else if ($transaction == 'settlement') {
-            // Payment success
-            // Update transaction status in the database
-        } else if ($transaction == 'pending') {
-            // Payment pending
-        } else if ($transaction == 'deny') {
-            // Payment failed
-        }
+    //     // Process transaction status
+    //     if ($transaction == 'capture') {
+    //         if ($fraud_status == 'accept') {
+    //             // Payment success
+    //             // Update transaction status in the database
+    //         }
+    //     } else if ($transaction == 'settlement') {
+    //         // Payment success
+    //         // Update transaction status in the database
+    //     } else if ($transaction == 'pending') {
+    //         // Payment pending
+    //     } else if ($transaction == 'deny') {
+    //         // Payment failed
+    //     }
 
-        return $this->respond(['status' => 'success']);
-    }
+    //     return $this->respond(['status' => 'success']);
+    // }
 }

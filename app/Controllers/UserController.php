@@ -49,10 +49,8 @@ class UserController extends ResourceController
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
         if ($model->insert($data)) {
-            log_message('info', 'User created successfully');
             return $this->respondCreated(['status' => 'success', 'message' => 'User created successfully.']);
         } else {
-            log_message('error', 'User creation failed. Errors: ' . json_encode($model->errors()));
             return $this->fail($model->errors());
         }
     }
@@ -107,7 +105,8 @@ class UserController extends ResourceController
     public function delete($id = null)
     {
         $model = new UserModel();
-        if ($model->delete($id)) {
+        $user = $model->find($id);
+        if ($user && $model->delete($id)) {
             return $this->respondDeleted(['status' => 'success', 'message' => 'User deleted successfully.']);
         } else {
             return $this->failNotFound('User not found');
