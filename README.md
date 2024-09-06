@@ -1,68 +1,79 @@
-# CodeIgniter 4 Application Starter
+# CodeIgniter 4 REST API with User Flow and Midtrans Integration
 
-## What is CodeIgniter?
+This project is a RESTful API built with CodeIgniter 4. It includes user flow functionalities (login, registration, update, and delete) and integrates Midtrans as a payment gateway for handling transactions. The project is structured with environment-based configuration, secured authentication, and RESTful responses.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+## Table of Contents
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+- [Features](#features)
+- [Requirements](#requirements)
+- [Database Structure](#database-structure)
+- [Usage](#usage)
+  - [User Flow](#user-flow)
+  - [Midtrans Payment Integration](#midtrans-payment-integration)
+- [Routes](#routes)
+- [Security Considerations](#security-considerations)
+- [Postman API Documentation](#postman-api-documentation)
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+## Features
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+- User authentication (register, login)
+- Update and delete user information
+- Integration with Midtrans for payment gateway
+- Environment-based configuration for Midtrans API keys
+- RESTful response structure with JSON formatting
 
-## Installation & updates
+## Requirements
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+- PHP 8+
+- CodeIgniter 4
+- Composer
+- MySQL/MariaDB (or another relational database)
+- Midtrans account (for payment integration)
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+## Database MySQL Query
 
-## Setup
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+CREATE TABLE transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    transaction_id VARCHAR(255),
+    status VARCHAR(50),
+    amount DECIMAL(10,2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
 
-## Important Change with index.php
+Usage
+User Flow
+Register: Create a new user by sending a POST request with username, email, and password.
+Login: Authenticate the user by sending email and password, and receive a response indicating success or failure.
+Get All Users: Read user's information by sending a GET request
+Get Users: Read user's information by sending a GET request with user's ID
+Update User: Update user information by sending a PUT request with the user's ID and the updated information.
+Delete User: Delete a user by sending a DELETE request with the user's ID.
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+Midtrans Payment Integration
+Charge Payment: Send a POST request with payment details (such as amount and customer details) to generate a payment transaction.
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+The following RESTful routes are available in this API:
+Method	Route	Description
+POST	/user/register	Register a new user
+POST	/user/login	Login user
+PUT	/user/update/{id}	Update user by ID
+DELETE	/user/delete/{id}	Delete user by ID
+POST	/payment/charge	Charge a payment
 
-**Please** read the user guide for a better explanation of how CI4 works!
+Security Considerations
+Make sure to hash passwords using the password_hash() function.
+Use HTTPS to secure the communication between the client and the server, especially for sensitive operations like login and payment.
+Implement token-based authentication (e.g., JWT) for securing the update and delete user routes.
 
-## Repository Management
-
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
-
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
-
-## Server Requirements
-
-PHP version 8.1 or higher is required, with the following extensions installed:
-
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
-
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
-
-Additionally, make sure that the following extensions are enabled in your PHP:
-
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+Postman API Documentation
+You can test this API with Postman or any other API testing tool. Postman collections can be created to document and test the available endpoints.
