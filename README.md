@@ -50,7 +50,7 @@ CREATE TABLE transactions (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-Usage
+## Usage
 User Flow
 Register: Create a new user by sending a POST request with username, email, and password.
 Login: Authenticate the user by sending email and password, and receive a response indicating success or failure.
@@ -62,6 +62,7 @@ Delete User: Delete a user by sending a DELETE request with the user's ID.
 Midtrans Payment Integration
 Charge Payment: Send a POST request with payment details (such as amount and customer details) to generate a payment transaction.
 
+## Routes
 The following RESTful routes are available in this API:
 Method	Route	Description
 POST	/user/register	Register a new user
@@ -70,10 +71,10 @@ PUT	/user/update/{id}	Update user by ID
 DELETE	/user/delete/{id}	Delete user by ID
 POST	/payment/charge	Charge a payment
 
-Security Considerations
+## Security Considerations
 Make sure to hash passwords using the password_hash() function.
 Use HTTPS to secure the communication between the client and the server, especially for sensitive operations like login and payment.
 Implement token-based authentication (e.g., JWT) for securing the update and delete user routes.
 
-Postman API Documentation
+## Postman API Documentation
 You can test this API with Postman or any other API testing tool. Postman collections can be created to document and test the available endpoints.
